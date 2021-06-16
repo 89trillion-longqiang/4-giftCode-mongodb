@@ -3,17 +3,19 @@ package service
 import (
 	"context"
 	"fmt"
-	"giftCode_04/config"
-	userInfo2 "giftCode_04/model/userInfo"
-	"go.mongodb.org/mongo-driver/bson"
 	"log"
+
+	"giftCode_04/config"
+	"giftCode_04/model/userInfo"
+	"go.mongodb.org/mongo-driver/bson"
+
 )
 var client ,collection= config.InitMongodb()
 
 
 
 
-func InsertMongo(info userInfo2.UserInfo,col string)bool{
+func InsertMongo(info userInfo.UserInfo,col string)bool{
 	_ ,err :=collection.Collection(col).InsertOne(context.TODO(),info)
 	if err != nil{
 		return false
@@ -21,9 +23,9 @@ func InsertMongo(info userInfo2.UserInfo,col string)bool{
 	return true
 }
 
-func FindMongo(key string,value string,col string) (userInfo2.UserInfo, error){
+func FindMongo(key string,value string,col string) (userInfo.UserInfo, error){
 	filter := bson.D{{key,value}}
-	var result userInfo2.UserInfo
+	var result userInfo.UserInfo
 	err := collection.Collection(col).FindOne(context.TODO(),filter).Decode(&result)
 	if result.Uid == "" && err != nil {
 		return result,err

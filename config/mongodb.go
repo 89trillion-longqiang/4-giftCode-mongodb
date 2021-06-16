@@ -3,9 +3,10 @@ package config
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
 func InitMongodb()(client *mongo.Client,collection  *mongo.Database){

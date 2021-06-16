@@ -3,14 +3,15 @@ package service
 import (
 	"context"
 	"fmt"
+
 	"giftCode_04/config"
-	gift2 "giftCode_04/model/gift"
+	"giftCode_04/model/gift"
 	"github.com/go-redis/redis/v8"
 )
 
 var rdb *redis.Client  = config.InitClient() ///声明一个全局的rdb变量
 
-func HashSet(g gift2.Gift) error{
+func HashSet(g gift.Gift) error{
 	ctx := context.Background()
 
 	if g.IsEmpty() {
