@@ -48,6 +48,27 @@
 |module  | /module|数据模型 操作数据库 |被handle调用|
 |util    | /util | 通用工具 | 被handle调用|
 
+#存储设计
+##gift
+| 内容 | 类型 |  说明 |
+| :----:| :---- | :----|
+|GiftCode |string |礼包码
+|Description |string|礼包描述
+|GiftNum |string	|可领取数
+|ValidPeriod |string|有效期
+|GiftContent| string | 礼包内容
+|CreatePer |string  |创建用户
+|CreatTime| string  |创建时间
+|AvailableNum| string |已领取次数
+|ClaimList |string   |领取列表
+
+##UserInfo
+| 内容 | 类型 |  说明 |
+| :----:| :---- | :----|
+|Uid  |string| 存储用户的唯一UID|
+|Gold |string| 金币数量|
+|Diamond |string| 钻石数量|
+
 #接口设计
 
 ##1.注册与登录接口

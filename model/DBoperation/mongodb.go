@@ -16,7 +16,7 @@ var client ,collection= config.InitMongodb()
 
 
 func InsertMongo(info userInfo.UserInfo,col string)bool{
-	_ ,err :=collection.Collection(col).InsertOne(context.TODO(),info)
+	_ ,err := collection.Collection(col).InsertOne(context.TODO(),info)
 	if err != nil{
 		return false
 	}
@@ -43,7 +43,7 @@ func UpdataMongo(keyID string,valueID string,giftKey string,gift string)bool{
 		}},
 	}
 
-	result ,err :=collection.Collection("info").UpdateOne(context.TODO(),filter,update)
+	result ,err := collection.Collection("info").UpdateOne(context.TODO(),filter,update)
 	if err != nil {     log.Fatal(err) }
 	if result.MatchedCount != 0 {
 		fmt.Println("matched and replaced an existing document")
@@ -57,7 +57,7 @@ func UpdataMongo(keyID string,valueID string,giftKey string,gift string)bool{
 
 func ExistId(id string,col string)  bool{
 
-	result,_:=FindMongo("Uid",id,col)
+	result,_:= FindMongo("Uid",id,col)
 	if result.Uid == ""{
 		return false
 	}
