@@ -2,22 +2,22 @@ package handle
 
 import (
 	"fmt"
-	"google.golang.org/protobuf/proto"
 	"strconv"
 	"strings"
 	"time"
 
+	"giftCode_04/model/DBoperation"
 	"giftCode_04/model/Protobuf"
 	"giftCode_04/model/gift"
 	"giftCode_04/model/userInfo"
-	"giftCode_04/service"
 	"giftCode_04/util"
+	"google.golang.org/protobuf/proto"
 )
 func HandleAdminCreatGiftcode(des string,GiftNum string,ValidPeriod string,GiftContent string,CreatePer string)  map[string]string{
 	retMap := make(map[string]string,2)
 	GiftCode := util.GetRandCode(8)
 	CreatTime := time.Unix(time.Now().Unix(),0).Format("2006-01-02 15:04:05")
-	err := service.HashSet(gift.Gift{
+	err := DBoperation.HashSet(gift.Gift{
 		GiftCode,
 		des,
 		GiftNum,
@@ -46,8 +46,8 @@ func HadnleAdminInquireGiftCode(GiftCode string) (map[string]string,map[string]s
 		return retMap , nil
 	}
 
-	if service.ExistsKey(GiftCode) {
-		ret, err := service.HashGetAll(GiftCode)
+	if DBoperation.ExistsKey(GiftCode) {
+		ret, err := DBoperation.HashGetAll(GiftCode)
 		if err != nil {
 			retMap["condition"]="error"
 			retMap["giftCode"] =  err.Error()
@@ -78,7 +78,7 @@ func HandleClient(GiftCode string,userName string) map[string]string{
 		return retMap
 	}
 
-	ret , err := service.HashGetAll(GiftCode)
+	ret , err := DBoperation.HashGetAll(GiftCode)
 	ret["GiftCode"] = GiftCode
 	if err != nil{
 		retMap["condition"]="error"
@@ -116,7 +116,7 @@ func HandleClient(GiftCode string,userName string) map[string]string{
 		ret["AvailableNum"] = avanumS
 		ret["ClaimList"] = string(ret["ClaimList"]) +" " + outString + ";"
 
-		err := service.HashSetMap(ret)
+		err := DBoperation.HashSetMap(ret)
 		if err != nil {
 			fmt.Printf("%s",err)
 		}
@@ -143,7 +143,11 @@ func HandleLogin(id string)  (string ,map[string]string) {
 		data string
 		flag bool
 	)
-	ret , err :=service.FindMongo("uid",id,"info")
+	ret , err := DBoperation.FindMongo("uid",id,"info")
+	
+	if &ret == nil {
+		return "", nil
+	}
 	if ret.Uid == ""{
 		fmt.Println("UID  is  empty")
 		data = "no_exist"
@@ -151,14 +155,14 @@ func HandleLogin(id string)  (string ,map[string]string) {
 
 		newUid := userInfo.GetRandCode(8)
 		for flag=true ; flag ;{
-			if service.ExistId(newUid,"info") {
+			if DBoperation.ExistId(newUid,"info") {
 				newUid = userInfo.GetRandCode(8)
 			}else {
 				flag = false
 			}
 		}
 
-		if service.InsertMongo(userInfo.UserInfo{Uid: newUid, Gold: "0", Diamond: "0"},"info") {
+		if DBoperation.InsertMongo(userInfo.UserInfo{Uid: newUid, Gold: "0", Diamond: "0"},"info") {
 			retMap["Uid"] = newUid
 			retMap["Gold"] = "0"
 			retMap["Diamond"] = "0"
@@ -178,13 +182,8 @@ func HandleLogin(id string)  (string ,map[string]string) {
 }
 
 func HandleVerGiftCode(GiftCode string,Uid string) ([]byte ,string){
-	if GiftCode == ""{
-		return nil,"error"
-	}
-	if Uid == ""{
-		return nil,"error"
-	}
-	ret , err := service.HashGetAll(GiftCode)
+
+	ret , err := DBoperation.HashGetAll(GiftCode)
 	ret["GiftCode"] = GiftCode
 	if err != nil{
 		return nil,"error"
@@ -216,7 +215,7 @@ func HandleVerGiftCode(GiftCode string,Uid string) ([]byte ,string){
 		ret["AvailableNum"] = avanumS
 		ret["ClaimList"] = string(ret["ClaimList"]) +" " + outString + ";"
 
-		err := service.HashSetMap(ret)
+		err := DBoperation.HashSetMap(ret)
 		if err != nil {
 			fmt.Printf("%s",err)
 			return nil, "error"
@@ -229,8 +228,10 @@ func HandleVerGiftCode(GiftCode string,Uid string) ([]byte ,string){
 	counter := make(map[uint32]uint64,2)
 	GiftContent := ret["GiftContent"]
 	tempS :=strings.Split(GiftContent,":")
-	beforeInfo,err:= service.FindMongo("uid",Uid,"info")
-
+	beforeInfo,err:= DBoperation.FindMongo("uid",Uid,"info")
+	if &beforeInfo == nil{
+		return nil, ""
+	}
 	if len(tempS) == 4{
 		GoldNum_B ,_:=strconv.Atoi(beforeInfo.Gold)
 		DiaNUm_B ,_ := strconv.Atoi(beforeInfo.Diamond)
@@ -243,8 +244,8 @@ func HandleVerGiftCode(GiftCode string,Uid string) ([]byte ,string){
 		GloNew := GoldNum_B+GoldInc
 		DiaNew := DiaNUm_B +DiaInc
 
-		service.UpdataMongo("uid",Uid, "gold", strconv.Itoa(GloNew))
-		service.UpdataMongo("uid",Uid, "diamond",strconv.Itoa(DiaNew))
+		DBoperation.UpdataMongo("uid",Uid, "gold", strconv.Itoa(GloNew))
+		DBoperation.UpdataMongo("uid",Uid, "diamond",strconv.Itoa(DiaNew))
 		counter[0001] = uint64(GloNew)
 		counter[0002] = uint64(DiaNew)
 	}
