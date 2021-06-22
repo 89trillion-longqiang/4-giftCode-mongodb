@@ -33,8 +33,10 @@
 │       └── userInfo.go
 ├── router                          #路由转发
 │   └── router.go
-└── util                            #工具方法
-    └── getRandCode.go              #获取随机数
+├── util                            #工具方法
+│   └── getRandCode.go              #获取随机数
+├── picture                         
+    ├── flowchat.png          #流程图
 ```
 
 #代码逻辑分层  gift-MongoDB
@@ -128,3 +130,5 @@ usr 类型string 用户的id
 用于 通信数据的传输格式protobuf
 代码  https://google.golang.org/protobuf      
 ```
+#流程图
+![xxx](picture/flowchat.png)
