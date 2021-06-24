@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"giftCode_04/config"
-	"giftCode_04/model/gift"
 	"github.com/go-redis/redis/v8"
+
+	"giftCode_04/config"
+	"giftCode_04/module/gift"
 )
 
 var rdb *redis.Client  = config.InitClient() ///声明一个全局的rdb变量

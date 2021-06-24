@@ -1,8 +1,9 @@
 package router
 
 import (
-	"giftCode_04/ctrl"
 	"github.com/gin-gonic/gin"
+
+	"giftCode_04/ctrl"
 )
 func SetUpRount() *gin.Engine  {
 	r := gin.Default()

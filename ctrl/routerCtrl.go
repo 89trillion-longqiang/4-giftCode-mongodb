@@ -1,8 +1,9 @@
 package ctrl
 
 import (
-	"giftCode_04/handle"
 	"github.com/gin-gonic/gin"
+
+	"giftCode_04/handle"
 )
 
 func AdminCreatGiftcode(c *gin.Context){

@@ -6,12 +6,13 @@ import (
 	"strings"
 	"time"
 
-	"giftCode_04/model/DBoperation"
-	"giftCode_04/model/Protobuf"
-	"giftCode_04/model/gift"
-	"giftCode_04/model/userInfo"
-	"giftCode_04/util"
 	"google.golang.org/protobuf/proto"
+
+	"giftCode_04/module/DBoperation"
+	"giftCode_04/module/Protobuf"
+	"giftCode_04/module/gift"
+	"giftCode_04/module/userInfo"
+	"giftCode_04/util"
 )
 func HandleAdminCreatGiftcode(des string,GiftNum string,ValidPeriod string,GiftContent string,CreatePer string)  map[string]string{
 	retMap := make(map[string]string,2)

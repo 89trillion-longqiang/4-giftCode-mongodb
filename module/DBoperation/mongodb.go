@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"giftCode_04/config"
-	"giftCode_04/model/userInfo"
 	"go.mongodb.org/mongo-driver/bson"
 
+	"giftCode_04/config"
+	"giftCode_04/module/userInfo"
 )
 var client ,collection= config.InitMongodb()
 
